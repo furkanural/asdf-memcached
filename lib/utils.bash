@@ -40,13 +40,13 @@ download_release() {
   local version filename url
   version="$1"
   filename="$2"
-  download_path="$3"
 
   # TODO: Adapt the release URL convention for memcached
   url="$GH_REPO/archive/refs/tags/${version}.tar.gz"
 
   echo "* Downloading $TOOL_NAME release $version..."
-  curl "$download_path" -o "$filename" -C - "$url" || fail "Could not download $url"
+
+  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
 install_version() {
@@ -60,26 +60,21 @@ install_version() {
 
   (
     mkdir -p "$install_path"
-    cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+
+    local download_path_and_version="$ASDF_DOWNLOAD_PATH/$version"
+    local configuration_options="--prefix=$install_path"
+
+    cd $(dirname $download_path_and_version)
+
+    ./autogen.sh || exit 1
+    ./configure $configuration_options || exit 1
+    make || exit 1
+    make install || exit 1
 
     # TODO: Asert memcached executable exists.
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
-
-    local file_name = "$TOOL_NAME-$version.tar.gz"
-    local source_path="$tmp_download_dir/$TOOL_NAME-$version.tar.gz"
-    local configuration_options="--prefix=$install_path"
-
-    download_release $version $file_name $source_path
-
-    cd $(dirname $source_path)
-    tar zxf $source_path || exit 1
-    cd $(untar_path $version $tmp_download_dir)
-
-    ./configure $configuration_options || exit 1
-    make || exit 1
-    make install || exit 1
 
     echo "$TOOL_NAME $version installation was successful!"
   ) || (
