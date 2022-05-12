@@ -11,22 +11,21 @@
 
 - [Dependencies](#dependencies)
 - [Install](#install)
-- [Why?](#why)
 - [Contributing](#contributing)
 - [License](#license)
 
 # Dependencies
 
-- `bash`, `curl`, `tar`: generic POSIX utilities.
-- `SOME_ENV_VAR`: set this environment variable in your shell config to load the correct version of tool x.
+- MacOS
+  - automake
+- Ubuntu
+  - libevent-dev
 
 # Install
 
 Plugin:
 
 ```shell
-asdf plugin add memcached
-# or
 asdf plugin add memcached https://github.com/furkanural/asdf-memcached.git
 ```
 
@@ -44,6 +43,9 @@ asdf global memcached latest
 
 # Now memcached commands are available
 memcached --version
+
+# Run memcached in background
+memcached -d
 ```
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
