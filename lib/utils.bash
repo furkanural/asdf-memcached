@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for memcached.
-GH_REPO="https://github.com/furkanural/asdf-memcached"
+GH_REPO="https://github.com/memcached/memcached"
 TOOL_NAME="memcached"
 TOOL_TEST="memcached --version"
 
@@ -40,12 +40,13 @@ download_release() {
   local version filename url
   version="$1"
   filename="$2"
+  download_path="$3"
 
   # TODO: Adapt the release URL convention for memcached
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  url="$GH_REPO/archive/refs/tags/${version}.tar.gz"
 
   echo "* Downloading $TOOL_NAME release $version..."
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+  curl "$download_path" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
 install_version() {
@@ -65,6 +66,20 @@ install_version() {
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
+
+    local file_name = "$TOOL_NAME-$version.tar.gz"
+    local source_path="$tmp_download_dir/$TOOL_NAME-$version.tar.gz"
+    local configuration_options="--prefix=$install_path"
+
+    download_release $version $file_name $source_path
+
+    cd $(dirname $source_path)
+    tar zxf $source_path || exit 1
+    cd $(untar_path $version $tmp_download_dir)
+
+    ./configure $configuration_options || exit 1
+    make || exit 1
+    make install || exit 1
 
     echo "$TOOL_NAME $version installation was successful!"
   ) || (
