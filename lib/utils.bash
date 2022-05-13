@@ -53,11 +53,10 @@ install_version() {
     mkdir -p "$install_path"
 
     local download_path_and_version="$ASDF_DOWNLOAD_PATH/$version"
-    local configuration_options="--prefix=$install_path"
+    local configuration_options="--prefix=$install_path --disable-coverage"
 
     cd $(dirname $download_path_and_version)
 
-    ./autogen.sh || exit 1
     ./configure $configuration_options || exit 1
     make || exit 1
     make install || exit 1
