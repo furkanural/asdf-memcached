@@ -37,7 +37,13 @@ download_release() {
 
   echo "* Downloading $TOOL_NAME release $version..."
 
-  curl -o "$filename" -C - "$url" || curl -o "$filename" -C - "$old_url" || fail "Could not download $url"
+  if curl --output /dev/null --silent --head --fail "$url"; then
+    curl -o "$filename" -C - "$url" || fail "Could not download $url"
+  fi
+
+  if curl --output /dev/null --silent --head --fail "$old_url"; then
+    curl -o "$filename" -C - "$old_url" || fail "Could not download $old_url"
+  fi
 }
 
 install_version() {
