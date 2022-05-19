@@ -51,6 +51,14 @@ memcached -d
 Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
 install & manage versions.
 
+## ASDF options
+
+When installing memcached using asdf install, you can pass custom configure options with the following env var:
+
+- `ASDF_MEMCACHED_CONFIGURE_OPTIONS`
+
+For example, if you want to compile with an openssl libraries `ASDF_MEMCACHED_CONFIGURE_OPTIONS="--enable-tls --with-libssl=$(brew --prefix openssl@1.1)" asdf install memcached`
+
 # Contributing
 
 Contributions of any kind welcome! See the [contributing guide](contributing.md).
