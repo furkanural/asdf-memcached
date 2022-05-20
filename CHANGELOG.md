@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/furkanural/asdf-memcached/compare/v1.0.0...v1.1.0) (2022-05-20)
+
+
+### Features
+
+* **memcached:** install memcached with extra configuration ([b19fd66](https://github.com/furkanural/asdf-memcached/commit/b19fd6630df846d9e60c76c4cb9f7437cb37c91b))
+
+
+### Bug Fixes
+
+* refactoring comments ([00b8d2a](https://github.com/furkanural/asdf-memcached/commit/00b8d2a4127d10179eeaf160075b2d29df6ef778))
+
 ## 1.0.0 (2022-05-13)
 
 
