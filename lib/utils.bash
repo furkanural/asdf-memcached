@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for memcached.
 RELEASES_URL="https://github.com/memcached/memcached/wiki/ReleaseNotes"
 DOWNLOAD_URL="http://www.memcached.org/files/"
 TOOL_NAME="memcached"
@@ -31,7 +30,6 @@ download_release() {
   version="$1"
   filename="$2"
 
-  # TODO: Adapt the release URL convention for memcached
   url="$DOWNLOAD_URL/$TOOL_NAME-${version}.tar.gz"
   old_url="$DOWNLOAD_URL/old/$TOOL_NAME-${version}.tar.gz"
 
@@ -68,14 +66,10 @@ install_version() {
 
     cd $(dirname $download_path_and_version)
 
-    echo "Testing confg"
-    echo $configuration_options
-
     ./configure $configuration_options || exit 1
     make || exit 1
     make install || exit 1
 
-    # TODO: Asert memcached executable exists.
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
